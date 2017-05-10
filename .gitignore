@@ -1,3 +1,6 @@
 # For the ESP8266
 esp/build
 esp/firmware
+
+# Vim swap files
+*.swp
