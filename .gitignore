@@ -4,3 +4,20 @@ esp/firmware
 
 # Vim swap files
 *.swp
+
+# For django
+*.egg-info
+*.pot
+*.py[co]
+webserver/.tox/
+webserver/__pycache__
+webserver/MANIFEST
+webserver/dist/
+webserver/docs/_build/
+webserver/docs/locale/
+webserver/node_modules/
+webserver/tests/coverage_html/
+webserver/tests/.coverage
+webserver/build/
+webserver/tests/report/
+*.sqlite3
