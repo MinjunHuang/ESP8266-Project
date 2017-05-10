@@ -157,3 +157,14 @@ uint8 dht_force_poll(struct dht_t *dht)
 	dht->state = DHT_OK;
 	return dht->state;
 }
+
+char* dht_state_string(struct dht_t *dht)
+{
+	switch (dht->state) {
+	case DHT_OK: return "OK";
+	case DHT_TIMEOUT: return "TIMEOUT";
+	case DHT_CHECKSUM_ERROR: return "CHECKSUM_ERROR";
+	default: return "UNKNOWN_ERROR";
+	}
+}
+

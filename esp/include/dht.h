@@ -24,5 +24,6 @@ void dht_init(struct dht_t *dht, uint8 gpio_name);
 uint8 dht_read_temperature(struct dht_t *dht, float *temperature);
 uint8 dht_read_humidity(struct dht_t *dht, float *humidity);
 uint8 dht_force_poll(struct dht_t *dht);
+char *dht_state_string(struct dht_t *dht);
 
 #endif
