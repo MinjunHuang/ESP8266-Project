@@ -81,15 +81,22 @@ void connect_cb(void *arg)
 	char request[255]; // The HTTP request data
 	char body[127]; // Only the body of the request
 
+	uint8_t mac[6] = {0, 0, 0, 0, 0, 0};
+	if(!wifi_get_macaddr(0, mac)) {
+		os_printf("Failed to get mac address\n");
+	}
+	char macstring[18];
+	os_sprintf(macstring, "%02X:%02X:%02X:%02X:%02X:%02X",
+			mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+
 	// Add data to the request body
-	os_sprintf(body, "temperature=%d&humidity=%d",
-			(int32)temp, (int32)hum);
+	os_sprintf(body, "temperature=%d&humidity=%d&mac=%s",
+			(int32)temp, (int32)hum, macstring);
 	uint8_t body_len = strlen(body); // The length of the body
 
 	// Fill the request
 	os_sprintf(request, ""
-			"POST /api/list HTTP/1.1\r\n"
-			"Host: 192.168.97.16:8000\r\n"
+			"POST /api/post HTTP/1.1\r\n"
 			"Content-Type: application/x-www-form-urlencoded\r\n"
 			"Content-Length: %d\r\n"
 			"\r\n"
