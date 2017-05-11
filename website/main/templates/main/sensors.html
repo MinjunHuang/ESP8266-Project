@@ -13,16 +13,18 @@
 <body>
 	{% include "navigation.html" %}
 
-	<table class="table table-bordered table-stripped table-hover table-responsive">
-		<thead>
-			<tr>
-				<th>MAC Address</th>
-				<th>Sensor name</th>
-			</tr>
-		</thead>
-		<tbody id="sensorsTable">
-		</tbody>
-	</table>
+	<div class="container-fluid">
+		<table class="table table-bordered table-stripped table-hover table-responsive">
+			<thead>
+				<tr>
+					<th>MAC Address</th>
+					<th>Sensor name</th>
+				</tr>
+			</thead>
+			<tbody id="sensorsTable">
+			</tbody>
+		</table>
+	</div>
 
 	<div id="myModal" class="modal fade" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
