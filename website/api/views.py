@@ -16,7 +16,7 @@ def add_measurement(request):
     hum = request.POST.get('humidity', None)
     mac = request.POST.get('mac', None)
     if mac is None:
-        return Response(3)
+        return Response()
 
     sensors = Sensor.objects.filter(mac_addr=mac)
     if sensors.count() == 0:
@@ -26,7 +26,7 @@ def add_measurement(request):
         sensor = sensors[0]
     post = Post(temperature=temp, humidity=hum, sensor=sensor)
     post.save()
-    return Response()
+    return Response(sensor.interval)
 
 @api_view(['GET'])
 def list_measurements(request):
@@ -63,8 +63,10 @@ def list_sensors(request):
 def put_sensor(request):
     mac = request.GET['mac']
     name = request.GET['name']
+    interval = request.GET['interval']
     sensor = Sensor.objects.get(mac_addr=mac)
     sensor.name = name
+    sensor.interval = interval
     sensor.save()
     return Response()
 

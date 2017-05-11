@@ -18,10 +18,11 @@ function list() {
 
 function renameSensor() {
 	name=$("#newName").val();
+	interval=$("#newInterval").val();
 	console.log(name);
 	mac=sensorsList[currentSensor].mac_addr;
 	$.ajax({
-		url: '/api/put/sensor?mac='+mac+"&name="+name,
+		url: '/api/put/sensor?mac='+mac+"&name="+name+"&interval="+interval,
 		type: 'PUT',
 		success: function(result) {
 			list();
