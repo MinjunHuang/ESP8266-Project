@@ -6,7 +6,7 @@ from api.models import Sensor
 class SensorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sensor
-        fields = ('mac_addr', 'name')
+        fields = ('mac_addr', 'name', 'interval')
 
 class PostSerializer(serializers.ModelSerializer):
     sensor = SensorSerializer(read_only=True)

@@ -33,6 +33,7 @@ function renameSensor() {
 function openModal(index) {
 	currentSensor = index;
 	$("#newName").val(sensorsList[index].name);
+	$("#newInterval").val(sensorsList[index].interval);
 	$("#myModal").modal();
 }
 

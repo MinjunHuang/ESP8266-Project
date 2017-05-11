@@ -16,7 +16,7 @@ def add_measurement(request):
     hum = request.POST.get('humidity', None)
     mac = request.POST.get('mac', None)
     if mac is None:
-        return Response()
+        return Response(3)
 
     sensors = Sensor.objects.filter(mac_addr=mac)
     if sensors.count() == 0:

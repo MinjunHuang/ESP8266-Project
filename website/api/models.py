@@ -3,6 +3,7 @@ from django.db import models
 class Sensor(models.Model):
     mac_addr = models.CharField(max_length=32)
     name = models.CharField(max_length=64)
+    interval = models.IntegerField()
 
 class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
