@@ -2,7 +2,7 @@
 #define USER_CONFIG_H_INCLUDED
 
 // Sleep
-#define SLEEP_TIME 30*60*1000000
+#define SLEEP_TIME 20
 
 // Server
 #define SERVER_PORT 8000

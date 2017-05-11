@@ -12,6 +12,25 @@ static struct dht_t dht;
 
 struct station_config stationConf;
 
+static char http_buf[4096];
+static uint32_t http_buf_len = 0;
+
+int strfind(char *str, const char *target)
+{
+	int i;
+	for (i = 0; str[i] != '\0'; ++i) {
+		int j;
+		for (j = 0; target[j] != '\0' && str[i] != '\0'; ++j, ++i) {
+			if (str[i] != target[j])
+				break;
+		}
+		i -= j;
+		if (target[j] == '\0')
+			return i;
+	}
+	return -1;
+}
+
 void connect_cb(void *arg);
 void disconnect_cb(void *arg);
 void reconnect_cb(void *arg, int8_t errno);
@@ -23,7 +42,16 @@ void data_sent_callback(void *arg)
 {
 	os_printf("Data sent successfully\n");
     struct espconn *conn = (struct espconn *)arg;
-	espconn_disconnect(conn);
+	//espconn_disconnect(conn);
+}
+
+void data_received_callback(void *arg, char *pdata, unsigned short len)
+{
+    struct espconn *conn = (struct espconn *)arg;
+	memcpy(http_buf + http_buf_len, pdata, len);
+	http_buf_len += len;
+	http_buf[http_buf_len] = '\0';
+	//espconn_disconnect(conn);
 }
 
 
@@ -109,6 +137,7 @@ void connect_cb(void *arg)
 	} else {
 		// Setup callbacks [TODO add more]
 		espconn_regist_sentcb(conn, data_sent_callback);
+		espconn_regist_recvcb(conn, data_received_callback);
 	}
 }
 
@@ -128,8 +157,37 @@ void reconnect_cb(void *arg, int8_t errno)
  */
 void disconnect_cb(void *arg)
 {
+	uint64 sleep_time = SLEEP_TIME;
     os_printf("Disconnected\n");
-	system_deep_sleep(SLEEP_TIME);
+	int i = strfind(http_buf, "\r\n\r\n");
+	if (i == -1) {
+		os_printf("Message incomplete\n");
+	} else {
+		int start = i + 4;
+		os_printf("Body starts at %d\n", start);
+		os_printf("Buf len: %d\n", http_buf_len);
+		os_printf(">>>\n%s\n<<<\n", http_buf);
+		char num[8];
+		int sz = http_buf_len - start;
+		memcpy(num, http_buf + start, sz);
+		num[sz] = '\0';
+		int j;
+		sleep_time = 0;
+		for (j = 0; j < sz; ++j) {
+			char c = num[j];
+			if (c < '0' || c > '9') {
+				sleep_time = SLEEP_TIME;
+				break;
+			} else {
+				sleep_time *= 10;
+				sleep_time += c - '0';
+			}
+		}
+	}
+	os_printf("Sleeping for %llu minutes\n", sleep_time);
+	sleep_time *= 1000000;
+	sleep_time *= 60;
+	system_deep_sleep(sleep_time);
 }
 
 
