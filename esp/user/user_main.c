@@ -31,6 +31,13 @@ int strfind(char *str, const char *target)
 	return -1;
 }
 
+void sleep(uint64 minutes)
+{
+	minutes *= 1000000;
+	minutes *= 60;
+	system_deep_sleep(minutes);
+}
+
 void connect_cb(void *arg);
 void disconnect_cb(void *arg);
 void reconnect_cb(void *arg, int8_t errno);
@@ -78,7 +85,7 @@ void wifi_connect_cb()
 	// Attempt to connect to server
 	if(espconn_connect(conn)) {
 		os_printf("wifi_connect_cb::espconn_connect() failed\n");
-		system_deep_sleep(SLEEP_TIME);
+		sleep(SLEEP_TIME);
 	} else {
 		// Register callbacks for connection
 	    espconn_regist_connectcb(conn, connect_cb);
@@ -133,7 +140,7 @@ void connect_cb(void *arg)
 
     if (espconn_send(conn, request, strlen(request))) {
 		os_printf("connect_cb::espconn_send() failed. Aborting\n");
-		system_deep_sleep(SLEEP_TIME);
+		sleep(SLEEP_TIME);
 	} else {
 		// Setup callbacks [TODO add more]
 		espconn_regist_sentcb(conn, data_sent_callback);
@@ -148,7 +155,7 @@ void connect_cb(void *arg)
 void reconnect_cb(void *arg, int8_t errno)
 {
     os_printf("Failed to connect. Aborting\n");
-	system_deep_sleep(SLEEP_TIME);
+	sleep(SLEEP_TIME);
 }
 
 /**
@@ -185,9 +192,7 @@ void disconnect_cb(void *arg)
 		}
 	}
 	os_printf("Sleeping for %llu minutes\n", sleep_time);
-	sleep_time *= 1000000;
-	sleep_time *= 60;
-	system_deep_sleep(sleep_time);
+	sleep(sleep_time);
 }
 
 
